@@ -4,7 +4,7 @@
 target/
 target/*
 .nrepl-port
-gbtmago.mcts.impl
+gbtmago.mcts.iml
 mcts.iml
 
 
