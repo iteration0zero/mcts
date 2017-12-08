@@ -1,0 +1,10 @@
+
+.idea/
+.idea/*
+target/
+target/*
+.nrepl-port
+gbtmago.mcts.impl
+mcts.iml
+
+
