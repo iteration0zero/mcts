@@ -1,4 +1,4 @@
-(ns scratch.scratch
+(ns gbtmago.mcts.scratch
   (:require [gbtmago.mcts.mcts :as mcts]
             [gbtmago.mcts.tictactoe :as ttt])
   (:use [rhizome.viz]
@@ -33,7 +33,7 @@
                         :simulation-fn ttt/simulation-fn
                         :simulation-policy (fn [nodes] (rand-nth (into [] nodes)))
                         :value-update ttt/value-update})]
-        (if (< n 100)
+        (if (< n 500)
           (recur nt (inc n))
           nt))))
 
@@ -58,7 +58,10 @@
                                                  (sq-disp (board 6)) " | " (sq-disp (board 7)) " | " (sq-disp (board 8))
                                                  "\n" "\n"
                                                  "value: " (:value (tree n)) "\n"
-                                                 "visits: " (:visits (tree n)))})))
+                                                 "visits: " (:visits (tree n)))}))
+              :options {:fontsize 10.0
+                        :dpi 65}
+              :directed? false)
 
   (ttt/actions-fn game)
 
