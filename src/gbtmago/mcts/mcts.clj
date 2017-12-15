@@ -3,7 +3,6 @@
   (:use [rhizome.viz]))
 
 (defn mcts [{:keys [tree root state actions-fn transition-fn terminal? terminal-r-fn expansion-policy selection-policy selection-policy-args simulation-fn simulation-policy value-update]}]
-  (println "state: " state)
   (let [children (map (partial transition-fn state)
                       (actions-fn state))
         expanded-children (-> (tree state)
@@ -30,24 +29,6 @@
                             (update expanded-child assoc :value sim-value))
                         (-> tree
                             (update expanded-child update :value + sim-value)))]
-          (println "expansion")
-          (println "expanded-child " expanded-child)
-          (println "sim-value " sim-value)
-          (println "newtree " newtree)
-          (println "updated newtree: " (-> newtree
-                                           (update-in [state :children] conj expanded-child)
-                                           ((fn [t n]
-                                              (loop [t t
-                                                     n n]
-                                                (println "t: " t)
-                                                (println "n: " n)
-                                                (if (= n root)
-                                                  t
-                                                  (recur (-> t
-                                                             (update n update :value value-update sim-value n root)
-                                                             (update n update :visits inc))
-                                                         (:parent (t n))))))
-                                            state)))
           (-> newtree
               (update-in [state :children] conj expanded-child)
               ((fn [t n]
@@ -60,21 +41,20 @@
                                 (update n update :visits inc))
                             (:parent (t n))))))
                state)))
-        (do (println "selection")
-          (merge tree
-                 (mcts {:tree tree
-                        :root root
-                        :state (selection-policy tree children selection-policy-args)
-                        :actions-fn actions-fn
-                        :transition-fn transition-fn
-                        :terminal? terminal?
-                        :terminal-r-fn terminal-r-fn
-                        :expansion-policy expansion-policy
-                        :selection-policy selection-policy
-                        :selection-policy-args selection-policy-args
-                        :simulation-fn simulation-fn
-                        :simulation-policy simulation-policy
-                        :value-update value-update})))))))
+        (merge tree
+               (mcts {:tree tree
+                      :root root
+                      :state (selection-policy tree children selection-policy-args)
+                      :actions-fn actions-fn
+                      :transition-fn transition-fn
+                      :terminal? terminal?
+                      :terminal-r-fn terminal-r-fn
+                      :expansion-policy expansion-policy
+                      :selection-policy selection-policy
+                      :selection-policy-args selection-policy-args
+                      :simulation-fn simulation-fn
+                      :simulation-policy simulation-policy
+                      :value-update value-update}))))))
 
 
 (def game {:board [1 2 3 4 5 6 7 8 9 10 9 8 7 6 5 4 3 2 1]

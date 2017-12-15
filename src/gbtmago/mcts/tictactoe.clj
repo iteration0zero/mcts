@@ -65,14 +65,6 @@
 
 (defn selection-policy [tree nodes {:keys [c perspective-fn]}]
   (let [perspective (perspective-fn nodes)]
-    (println "selection policy result: " (sort-by :score > (map #(let [node-info (tree %)
-                                                                       parent-info (tree (:parent node-info))]
-                                                                   (hash-map :node %
-                                                                             :score (+ (/ (* (:value node-info) perspective) (:visits node-info))
-                                                                                       (* c (Math/sqrt (/ (Math/log (reduce + 0 (map (fn [n] (:visits (tree n)))
-                                                                                                                                     nodes)))
-                                                                                                          (:visits node-info)))))))
-                                                                nodes)))
     (:node (first (sort-by :score > (map #(let [node-info (tree %)
                                                 parent-info (tree (:parent node-info))]
                                             (hash-map :node %
@@ -83,13 +75,10 @@
                                          nodes))))))
 
 (defn value-update [old-value sim-value node start-node]
-  (println "value-update: " old-value sim-value node start-node)
   (let [perspective (if (= (:player node)
                            (:player start-node))
                        1
                       -1)]
-    (println "updated value: " (+ old-value
-                                  (* sim-value perspective)))
     (+ old-value
        (* sim-value perspective))))
 
